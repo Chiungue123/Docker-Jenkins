@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>User DB Data</title>
+<link rel="stylesheet" th:href="@{/styles/main.css}" />
+</head>
+<body>
+  <div th:replace="~{fragments :: header}"></div>
+<br>
+  <h2>User Search</h2>
+  <form action="/search" method="post">
+    User Id: <input type='text' name='id' required>
+    <br><br>
+    <input type='submit' value='Search'>
+  </form>
+</body>
+</html>

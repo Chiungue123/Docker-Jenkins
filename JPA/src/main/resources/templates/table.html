@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>User DB Data</title>
+<link rel="stylesheet" th:href="@{/styles/main.css}" />
+</head>
+<body>
+  <div th:replace="~{fragments :: header}"></div>
+<br>
+  <h2>User Table</h2>
+  <table border='1' th:if="${#objects.nullSafe(user,false)}">
+    <tr>
+      <th>Field Name</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <th>First Name</th>
+      <td th:text="${user?.firstName}"/>
+    </tr>
+    <tr>
+      <th>Last Name</td>
+      <td th:text="${user?.lastName}"/>
+    </tr>
+    <tr>
+      <th>Username</th>
+      <td th:text="${#strings.toUpperCase(user?.username)}"/>
+    </tr>
+    <tr>
+      <th>Birth</th>
+      <td th:text="${#dates.format(user.birth, 'dd-MM-yyyy')}"/>
+    </tr>
+    <tr>
+      <th>Status</th>
+      <td th:text="${user.status}"/>
+    </tr>
+  </table>
+  <table border='1' th:if="!${#objects.nullSafe(user,false)}"}>
+    <tr>
+      <th>User Not Found</th>
+    </tr>
+  </table>
+</body>
+</html>

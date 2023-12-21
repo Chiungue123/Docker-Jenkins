@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>User DB Data</title>
+<link rel="stylesheet" th:href="@{/styles/main.css}" />
+</head>
+<body>
+  <div th:replace="~{fragments :: header}"></div>
+  <br>
+  <h2>User List</h2>
+  <table>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Birth</th>
+      <th>Status</th>
+      <th>#</th>
+      <th>#</th>
+    </tr>
+    <tr th:each="user: ${users}" >
+      <th scope="row" th:text="${user.idUser}"/>
+      <td th:text="${user.firstName} + ' ' + ${user.lastName}"/>
+      <td th:text="${#strings.toUpperCase(user.username)}"/>
+      <td th:text="${#dates.format(user.birth, 'dd-MM-yyyy')}"/>
+      <td th:text="${user.status}"/>
+      <td><a th:href="@{/update/} + ${user.idUser}">Update</a></td>
+      <td><a th:href="@{/delete/} + ${user.idUser}">Delete</a></td>
+    </tr>
+  </table>
+</body>
+</html>
