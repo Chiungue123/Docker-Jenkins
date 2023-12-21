@@ -1,1 +1,39 @@
+pipeline {
+    agent any
 
+    stages {
+        stage('Clean') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/Chiungue123/Docker-Jenkins.git'
+
+                // Run Maven on a Unix agent.
+                sh "./mvnw clean"
+                
+                sh "./mvnw compile"
+                
+                echo 'Running maven clean and maven compile'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                
+                // Run Maven on a Unix agent.
+                sh "./mvnw test"
+
+                echo 'Running maven test'
+            }
+        }
+        
+        stage('Package') {
+            steps {
+
+                // Run Maven on a Unix agent.
+                sh "./mvnw package"
+                
+                echo 'Running maven package'
+            }
+        }
+    }
+}
