@@ -7,36 +7,38 @@ pipeline {
                 // Get some code from a GitHub repository
                 git 'https://github.com/Chiungue123/Docker-Jenkins.git'
 
-                sh 'pwd' // Print working directory
-                sh 'ls -l' // List files in current directory
-                sh 'chmod +x ./mvnw' // Set execution permission
-                
-                // Run Maven on a Unix agent.
-                sh "./mvnw clean"
-                
-                sh "./mvnw compile"
-                
-                echo 'Running maven clean and maven compile'
+                // Change to the JPA directory
+                dir('JPA') {
+                    // Run Maven on a Unix agent.
+                    sh "./mvnw clean"
+                    sh "./mvnw compile"
+
+                    echo 'Running maven clean and maven compile'
+                }
             }
         }
-        
+
         stage('Test') {
             steps {
-                
-                // Run Maven on a Unix agent.
-                sh "./mvnw test"
+                // Change to the JPA directory
+                dir('JPA') {
+                    // Run Maven on a Unix agent.
+                    sh "./mvnw test"
 
-                echo 'Running maven test'
+                    echo 'Running maven test'
+                }
             }
         }
-        
+
         stage('Package') {
             steps {
+                // Change to the JPA directory
+                dir('JPA') {
+                    // Run Maven on a Unix agent.
+                    sh "./mvnw package"
 
-                // Run Maven on a Unix agent.
-                sh "./mvnw package"
-                
-                echo 'Running maven package'
+                    echo 'Running maven package'
+                }
             }
         }
     }
