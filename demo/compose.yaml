@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_home:/var/jenkins_home
+    networks:
+      - my-custom-network
+      
+  jpa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: my-java-app:latest
+    ports:
+      - "9090:9090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/java_projects
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root1
+    depends_on:
+      mysql-container:
+        condition: service_healthy
+    networks:
+      - my-custom-network
+
+  mysql-container:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root1
+      MYSQL_DATABASE: java_projects
+      MYSQL_ROOT_USER: root
+    volumes:
+      - mysql-data:/var/lib/mysql
+    expose:
+      - "3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - my-custom-network
+
+volumes:
+  mysql-data:
+  jenkins_home:
+  
+networks:
+  my-custom-network:
+    driver: bridge

@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean Package') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/Chiungue123/Docker-Jenkins.git'
+
+                // Change to the JPA directory
+                dir('JPA') {
+                 
+                    // Run Maven on a Unix agent.
+                    sh "./mvnw clean package"
+
+                    echo 'Running maven clean package'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+		    steps {
+		        script {
+		        
+		        // Change to the JPA directory
+		        dir('JPA') {
+			            // Building Docker Image with a specific tag
+			            sh 'docker build -t my-java-app:${BUILD_NUMBER} -t my-java-app:latest .'
+			            
+			            echo 'Running docker build'
+		        	}
+		        }
+		    }
+		}
+
+		stage('Deploy with Docker Compose') {
+		    steps {
+		        script {
+		        
+		            // Running the Container
+		            sh 'docker-compose up -d'
+		            
+		            echo 'Running docker-compose up -d --build'
+		        }
+		    }
+		}
+		
+		stage('Cleanup') {
+		    steps {
+		        script {
+		            // Clean up dangling images
+		            sh 'docker image prune -f'
+		        }
+		    }
+		}
+    }
+}
