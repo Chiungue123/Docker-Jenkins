@@ -11,24 +11,26 @@ services:
     networks:
       - my-custom-network
       
-  jpa:
+  app:
+    command: ["/wait-for-it.sh", "db:3307", "--", "java", "-jar", "/target/demo-0.0.1-SNAPSHOT.jar"]
     build:
       context: .
       dockerfile: Dockerfile
-    image: my-java-app:latest
+    image: demo:latest
+    restart: always
     ports:
       - "9090:9090"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/java_projects
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db/java_projects
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root1
     depends_on:
-      mysql-container:
+      db:
         condition: service_healthy
     networks:
       - my-custom-network
 
-  mysql-container:
+  db:
     image: mysql:latest
     restart: always
     environment:
@@ -37,8 +39,8 @@ services:
       MYSQL_ROOT_USER: root
     volumes:
       - mysql-data:/var/lib/mysql
-    expose:
-      - "3306"
+    ports:
+      - "3307:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s

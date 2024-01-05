@@ -12,7 +12,7 @@ spring:
   Jackson:
     date-format: "yyyy-MM-dd"
   datasource: # Database Settings
-    url: jdbc:mysql://mysql-container:3306/java_projects
+    url: jdbc:mysql://db:3307/java_projects
     username: root
     password: root1
   jpa: # JPA Configuration

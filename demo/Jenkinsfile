@@ -7,8 +7,8 @@ pipeline {
                 // Get some code from a GitHub repository
                 git 'https://github.com/Chiungue123/Docker-Jenkins.git'
 
-                // Change to the JPA directory
-                dir('JPA') {
+                // Change to the demo project
+                dir('demo') {
                  
                     // Run Maven on a Unix agent.
                     sh "./mvnw clean package"
@@ -22,10 +22,10 @@ pipeline {
 		    steps {
 		        script {
 		        
-		        // Change to the JPA directory
-		        dir('JPA') {
+		        // Change to the demo project
+		        dir('demo') {
 			            // Building Docker Image with a specific tag
-			            sh 'docker build -t my-java-app:${BUILD_NUMBER} -t my-java-app:latest .'
+			            sh 'docker build -t demo:${BUILD_NUMBER} -t demo:latest .'
 			            
 			            echo 'Running docker build'
 		        	}
@@ -37,10 +37,12 @@ pipeline {
 		    steps {
 		        script {
 		        
-		            // Running the Container
-		            sh 'docker-compose up -d'
-		            
-		            echo 'Running docker-compose up -d --build'
+		        dir('demo') {
+			            // Run Docker Compose to build and start the services
+	                	sh 'docker-compose up -d --build'
+			            
+			            echo 'Running docker-compose up -d --build'
+		            }
 		        }
 		    }
 		}
@@ -48,8 +50,11 @@ pipeline {
 		stage('Cleanup') {
 		    steps {
 		        script {
-		            // Clean up dangling images
-		            sh 'docker image prune -f'
+		        
+		        dir('demo') {
+			            // Clean up dangling images
+			            sh 'docker image prune -f'
+		        	}
 		        }
 		    }
 		}
